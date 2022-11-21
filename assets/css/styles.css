@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 15px;
+  color: white;
+  background-color: burlywood;
+  letter-spacing: 2px;
+}
+
+.container {
+  margin: 0 20%;
+}
+
+.adding-wrapper,
+.list-wrapper {
+  text-align: center;
+  margin: 10% 0;
+}
+
+.adding-wrapper h2,
+.list-wrapper h2 {
+  text-transform: uppercase;
+  font-size: 2rem;
+  border-bottom: 1px solid white;
+}
+
+form,
+table {
+  margin: 5% 0;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+table thead th:not(:last-child) {
+  border-right: 1px solid white;
+}
+
+.thId {
+  width: 10%;
+}
+.thCategory {
+  width: 40%;
+}
+.thEdit,
+.thDelete {
+  width: 15%;
+}
+.my-form-group {
+  position: relative;
+}
+.my-form-group label {
+  display: block;
+  font-weight: bold;
+}
+
+.my-form-group input,
+.my-form-group button {
+  width: 20rem;
+  height: 2rem;
+  background: white;
+  border: none;
+  margin: 0.5rem;
+  color: burlywood;
+  border-radius: 1rem;
+  letter-spacing: 2px;
+}
+
+.my-form-group button {
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#addCategoryBtn,
+#updateCategoryBtn {
+  position: absolute;
+  right: 49%;
+  transform: translate(50%, 50%);
+}
+
+.my-form-group button:hover {
+  filter: drop-shadow(0px 3px 4px black);
+  text-shadow: 0 0 black;
+  transition: 0.3s;
+}
+
+.my-form-group input {
+  padding-left: 1rem;
+}
+
+.my-form-group input::placeholder {
+  color: burlywood;
+}
+
+.edit,
+.delete {
+  width: 6rem;
+  border: none;
+  padding: 5px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  letter-spacing: 2px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin: 4px 0;
+}
+
+.edit {
+  background: bisque;
+  color: gray;
+}
+
+.delete {
+  background-color: crimson;
+  color: white;
+}
