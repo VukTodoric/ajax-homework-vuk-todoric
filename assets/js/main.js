@@ -3,19 +3,19 @@ let categoryInput = document.getElementById("categoryInput"),
   updateCategoryBtn = document.getElementById("updateCategoryBtn"),
   tableBody = document.getElementById("tableBody");
 
+const URL_LOCAL = "http://localhost:3000";
+
 function Category(category_name) {
   this.category_name = category_name.value;
 }
 
 addCategoryBtn.addEventListener("click", function () {
-  fetch("http://localhost:3000/categories", {
+  fetch(URL_LOCAL + "/categories", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      category: new Category(categoryInput),
-    }),
+    body: JSON.stringify(new Category(categoryInput)),
   }).then(function () {
     renderList();
     resetInput();
@@ -23,7 +23,7 @@ addCategoryBtn.addEventListener("click", function () {
 });
 
 function renderList() {
-  fetch("http://localhost:3000/categories", {
+  fetch(URL_LOCAL + "/categories", {
     method: "GET",
   })
     .then(function (data) {
@@ -42,7 +42,7 @@ function createList(response) {
     const tableRow = document.createElement("tr");
     tableRow.innerHTML += `
       <td>${category.id}</td>
-      <td>${category.category.category_name}</td>
+       <td>${category.category_name}</td>
       <td><button class= "edit"  data-categoryid ="${category.id}">Edit</button></td>
       <td><button class= "delete"  data-categoryid ="${category.id}">Delete</button></td>
   `;
@@ -56,7 +56,7 @@ function deleteList() {
   for (let deleteLink of deleteLinks) {
     deleteLink.addEventListener("click", function (event) {
       const id = event.target.getAttribute("data-categoryid");
-      fetch("http://localhost:3000/categories/" + id, {
+      fetch(URL_LOCAL + "/categories/" + id, {
         method: "DELETE",
       }).then(function () {
         renderList();
@@ -70,28 +70,26 @@ function editList() {
   for (let editLink of editLinks) {
     editLink.addEventListener("click", function (event) {
       const id = event.target.getAttribute("data-categoryid");
-      fetch("http://localhost:3000/categories/" + id, {
+      fetch(URL_LOCAL + "/categories/" + id, {
         method: "GET",
       })
         .then(function (data) {
           return data.json();
         })
         .then(function (categories) {
-          categoryInput.value = categories.category.category_name;
+          categoryInput.value = categories.category_name;
           addCategoryBtn.style.display = "none";
           updateCategoryBtn.style.display = "block";
           updateCategoryBtn.setAttribute("data-categoryid", categories.id);
           updateCategoryBtn.addEventListener("click", function (event) {
             const id = event.target.getAttribute("data-categoryid");
 
-            fetch("http://localhost:3000/categories/" + id, {
+            fetch(URL_LOCAL + "/categories/" + id, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                category: new Category(categoryInput),
-              }),
+              body: JSON.stringify(new Category(categoryInput)),
             }).then(function () {
               addCategoryBtn.style.display = "block";
               updateCategoryBtn.style.display = "none";
