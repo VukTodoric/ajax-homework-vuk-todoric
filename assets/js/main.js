@@ -1,40 +1,28 @@
+import { URL_LOCAL } from "./enviroment.js";
+import { FetchApi } from "./service.js";
+import { Category } from "./modal.js";
+
 let categoryInput = document.getElementById("categoryInput"),
   addCategoryBtn = document.getElementById("addCategoryBtn"),
   updateCategoryBtn = document.getElementById("updateCategoryBtn"),
   tableBody = document.getElementById("tableBody");
 
-const URL_LOCAL = "http://localhost:3000";
-
-function Category(category_name) {
-  this.category_name = category_name.value;
-}
-
 addCategoryBtn.addEventListener("click", function () {
-  fetch(URL_LOCAL + "/categories", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(new Category(categoryInput)),
-  }).then(function () {
-    renderList();
-    resetInput();
-  });
+  FetchApi.getMethodPost(URL_LOCAL, new Category(categoryInput)).then(
+    function () {
+      renderList();
+      resetInput();
+    }
+  );
 });
 
 function renderList() {
-  fetch(URL_LOCAL + "/categories", {
-    method: "GET",
-  })
-    .then(function (data) {
-      return data.json();
-    })
-    .then(function (categories) {
-      tableBody.innerHTML = null;
-      createList(categories);
-      editList();
-      deleteList();
-    });
+  FetchApi.getMethodGet(URL_LOCAL).then(function (categories) {
+    tableBody.innerHTML = null;
+    createList(categories);
+    editList();
+    deleteList();
+  });
 }
 
 function createList(response) {
@@ -42,7 +30,7 @@ function createList(response) {
     const tableRow = document.createElement("tr");
     tableRow.innerHTML += `
       <td>${category.id}</td>
-       <td>${category.category_name}</td>
+      <td>${category.category_name}</td>
       <td><button class= "edit"  data-categoryid ="${category.id}">Edit</button></td>
       <td><button class= "delete"  data-categoryid ="${category.id}">Delete</button></td>
   `;
@@ -56,9 +44,7 @@ function deleteList() {
   for (let deleteLink of deleteLinks) {
     deleteLink.addEventListener("click", function (event) {
       const id = event.target.getAttribute("data-categoryid");
-      fetch(URL_LOCAL + "/categories/" + id, {
-        method: "DELETE",
-      }).then(function () {
+      FetchApi.getMethodDelete(URL_LOCAL, id).then(function () {
         renderList();
       });
     });
@@ -70,34 +56,25 @@ function editList() {
   for (let editLink of editLinks) {
     editLink.addEventListener("click", function (event) {
       const id = event.target.getAttribute("data-categoryid");
-      fetch(URL_LOCAL + "/categories/" + id, {
-        method: "GET",
-      })
-        .then(function (data) {
-          return data.json();
-        })
-        .then(function (categories) {
-          categoryInput.value = categories.category_name;
-          addCategoryBtn.style.display = "none";
-          updateCategoryBtn.style.display = "block";
-          updateCategoryBtn.setAttribute("data-categoryid", categories.id);
-          updateCategoryBtn.addEventListener("click", function (event) {
-            const id = event.target.getAttribute("data-categoryid");
-
-            fetch(URL_LOCAL + "/categories/" + id, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(new Category(categoryInput)),
-            }).then(function () {
-              addCategoryBtn.style.display = "block";
-              updateCategoryBtn.style.display = "none";
-              resetInput();
-              renderList();
-            });
+      FetchApi.getMethodGet(URL_LOCAL, id).then(function (categories) {
+        categoryInput.value = categories.category_name;
+        addCategoryBtn.style.display = "none";
+        updateCategoryBtn.style.display = "block";
+        updateCategoryBtn.setAttribute("data-categoryid", categories.id);
+        updateCategoryBtn.addEventListener("click", function (event) {
+          const id = event.target.getAttribute("data-categoryid");
+          FetchApi.getMethodPut(
+            URL_LOCAL,
+            new Category(categoryInput),
+            id
+          ).then(function () {
+            addCategoryBtn.style.display = "block";
+            updateCategoryBtn.style.display = "none";
+            resetInput();
+            renderList();
           });
         });
+      });
     });
   }
 }
